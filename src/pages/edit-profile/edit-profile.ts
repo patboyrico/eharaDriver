@@ -18,6 +18,7 @@ export class EditProfilePage {
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
       this.driverProfile = this.navParams.get('driver');
+      console.log(this.driverProfile);
   }
 
   ionViewDidLoad() {

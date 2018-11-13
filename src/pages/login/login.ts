@@ -50,13 +50,13 @@ export class LoginPage {
                   this.driverData = resp;
                   this.driverId = this.driverData.driver.id;
                   this.driverUserid = this.driverData.id;
-                 console.log(this.driverId);
               }
       );
       this.token.handle(data.access_token);
       this.navCtrl.setRoot(HomePage, {
         driver_data: this.driverData,
-        driver_id: this.driverId
+        driver_id: this.driverId,
+        driverUserId: this.driverUserid
       });
   }
 
@@ -73,7 +73,10 @@ export class LoginPage {
        this.handleResponse(data);
         loading.dismiss();
      },
-     error => this.handleError(error)
+     error => { 
+       this.handleError(error);
+     loading.dismiss();
+     }
     );
 
   }

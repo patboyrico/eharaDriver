@@ -51,6 +51,7 @@ export class HomePage {
                 this.driverDetails = this.navParams.get('driver_data');
                 this.driverUserId = this.navParams.get('driver_user_id');
                 this.driverDBId = this.navParams.get('driver_id');
+                console.log(this.driverDetails);
               }
 
     getRider()
@@ -72,7 +73,7 @@ export class HomePage {
       let mapOptions = {
         zoom: 18,
         mapTypeId: google.maps.MapTypeId.ROADMAP,
-        mapTypeControl: false,
+        mapTypeControl: false, 
         streetViewControl: false,
         fullscreenControl: false,
         disableDefaultUI: true
@@ -85,9 +86,10 @@ export class HomePage {
         this.map.setCenter(latLng);
         this.map.setZoom(18);
 
-      
+      let driveIcon = '../../assets/icons/icon-car.png';
     let driverMarker = new google.maps.Marker({
           position: latLng,
+          icon: driveIcon,
           title: 'Driver'
         });
         driverMarker.setMap(this.map);
@@ -107,17 +109,17 @@ export class HomePage {
                               this.map.setCenter(latLng);
                               this.lat = position.coords.latitude;
                               this.long = position.coords.longitude;
-                              this.updateDriverLocation( position.coords.latitude,  position.coords.longitude, this.driverId);
-                              //console.log(this.long + ' ' + this.lat);
+                              this.updateDriverLocation( position.coords.latitude,  position.coords.longitude);
+                              console.log(this.long + ' ' + this.lat);
     });
   }
 
-  updateDriverLocation(latitude, longitude, id)
+  updateDriverLocation(latitude, longitude)
   {
-      this.driverProvider.updateDriverLocation(latitude, longitude, this.driverId);
+      this.driverProvider.updateDriverLocation(latitude, longitude);
   }
 
-  updateDriverOnlineStatus($event)
+  updateDriverOnlineStatus()
   {
       this.isOnline = !this.isOnline;
       this.db.updateDriverOnlineStatus(this.driverDetails.id, { online: this.isOnline });

@@ -3,12 +3,14 @@ import { Injectable } from '@angular/core';
 
 import { AngularFireDatabase } from 'angularfire2/database';
 
+import * as GeoFire from "geofire";
+
+import * as Firebase from "firebase";
+
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+//import { map } from 'rxjs/operators';
 import { PickuprequestProvider } from '../pickuprequest/pickuprequest';
 
-import * as firebase from 'firebase';
-import { Rides } from '../../interfaces/rides.interface';
 import { Rider } from '../../interfaces/rider.interface';
 
 @Injectable()
@@ -24,20 +26,21 @@ export class DriverProvider {
   public riderId: string;
   public rider: Observable<Rider>;
 
-
+  dbLocationRef: any;
+  geoFire: any;
 
   constructor(public http: HttpClient, public afs: AngularFireDatabase,
               public pickuprequest: PickuprequestProvider
       ) {
-           
+        //  this.dbLocationRef = (this.afs.list('driversAvailable/' + this.driverId));
+        //  this.geoFire = new GeoFire(this.dbLocationRef.$ref);
       }
 
-      updateDriverLocation(latitude, longitude, id)
+      updateDriverLocation(latitude, longitude)
       {
-        this.afs.database.ref('driversAvailable/' + id + '/l').set({
-              0 : latitude,
-              1 : longitude
-        });
+        // this.geoFire.set(this.driverId, [latitude, longitude])
+        // .then(_ => console.log('location updated'))
+        // .catch(err => console.log(err))
       }
 
 
