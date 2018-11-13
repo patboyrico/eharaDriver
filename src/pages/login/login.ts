@@ -43,11 +43,10 @@ export class LoginPage {
 
   toDash()
   {
-    // this.auth.login(this.form).subscribe(
-    //  data => this.handleResponse(data),
-    //  error => this.handleError(error)
-    // );
-    this.navCtrl.setRoot(HomePage);
+    this.auth.login(this.form).subscribe(
+     data => this.handleResponse(data),
+     error => this.handleError(error)
+    );
 
   }
 
