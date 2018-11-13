@@ -1,5 +1,5 @@
 import { Component, ViewChild, ElementRef } from '@angular/core';
-import { NavController, Platform, LoadingController, AlertController } from 'ionic-angular';
+import { NavController, Platform, LoadingController, AlertController, NavParams, ModalController } from 'ionic-angular';
 
 import { Geolocation } from '@ionic-native/geolocation';
 import { DriverProvider } from '../../providers/rider/rider';
@@ -8,9 +8,12 @@ import { OnlineStateProvider } from '../../providers/online-state/online-state';
 import { PickuprequestProvider } from '../../providers/pickuprequest/pickuprequest';
 
 
+
 import { filter } from 'rxjs/operators';
 
 import { Driver } from '../../interfaces/driver.interface';
+import { EditProfilePage } from '../edit-profile/edit-profile';
+import { DbProvider } from '../../providers/db/db';
 
 
 declare var google: any;
@@ -23,9 +26,11 @@ export class HomePage {
 
    public lat:number;
    public long: number;
-   public driverDetails: Driver;
+   public driverDetails;
    public isOnline: boolean = false;
-   public driverId: string = '2ULXHsUunHoX6HEdSdaX';
+   public driverId: string = '9m1owztm3NXjthd0oEu2Ucf84vK2';
+   public driverDBId: number;
+   public driverUserId: number;
    public pickupRequestState: boolean = false;
 
    public rider: any;
@@ -38,13 +43,14 @@ export class HomePage {
 
   constructor(public navCtrl: NavController, public platform: Platform,
               public geo: Geolocation, public loadingCtrl: LoadingController,
-              public driver: DriverProvider, public onlineState: OnlineStateProvider,
+              public driverProvider: DriverProvider, public onlineState: OnlineStateProvider,
               public pickupRequest: PickuprequestProvider, public alertCtrl: AlertController,
-              public rides: RidesProvider
+              public rides: RidesProvider, public navParams: NavParams,
+              public modalCtrl: ModalController, public db: DbProvider
               ) {
-                console.log(this.driver.rider);
-                 this.driver.getDriverRides(this.driverId);
-                 console.log();
+                this.driverDetails = this.navParams.get('driver_data');
+                this.driverUserId = this.navParams.get('driver_user_id');
+                this.driverDBId = this.navParams.get('driver_id');
               }
 
     getRider()
@@ -101,43 +107,28 @@ export class HomePage {
                               this.map.setCenter(latLng);
                               this.lat = position.coords.latitude;
                               this.long = position.coords.longitude;
-                              this.updateDriverLocation( position.coords.latitude,  position.coords.longitude);
+                              this.updateDriverLocation( position.coords.latitude,  position.coords.longitude, this.driverId);
                               //console.log(this.long + ' ' + this.lat);
     });
   }
 
-  // driverStatus()
-  // {
-  //     let driver = this.driverDetails = {
-  //           username: 'Driver 1',
-  //           latitude: this.lat,
-  //           longitude: this.long,
-  //           isOnline: this.isOnline,
-  //           pickupRequest: false,
-  //           inRide: false,
-  //           visibility: 2
-  //     }
-
-  //   this.saveDriver(driver);
-  // }
-
-
-  
-  // saveDriver(driver)
-  // {
-  //     this.driver.addDriver(driver);
-  // }
-
-  updateDriverLocation(latitude, longitude)
+  updateDriverLocation(latitude, longitude, id)
   {
-      this.driver.updateDriverLocation(latitude, longitude, this.driverId);
+      this.driverProvider.updateDriverLocation(latitude, longitude, this.driverId);
   }
 
   updateDriverOnlineStatus($event)
   {
       this.isOnline = !this.isOnline;
-     // console.log(this.isOnline);
-      this.driver.updateDriverStatus(this.isOnline, this.driverId);
+      this.db.updateDriverOnlineStatus(this.driverDetails.id, { online: this.isOnline });
+  }
+
+  toProfile()
+  {
+      
+      let profileModal = this.modalCtrl.create(EditProfilePage, { driver: this.driverDetails });
+      profileModal.present();
+   
   }
 
   

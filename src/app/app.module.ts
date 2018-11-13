@@ -7,6 +7,7 @@ import { HomePage } from '../pages/home/home';
 import { LoginPage } from '../pages/login/login';
 import { RidesPage } from '../pages/rides/rides';
 import { EarningsPage } from '../pages/earnings/earnings';
+import { EditProfilePage } from '../pages/edit-profile/edit-profile';
 
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
@@ -19,7 +20,7 @@ import { RiderstateProvider } from '../providers/riderstate/riderstate';
 import { IonicStorageModule } from '@ionic/storage';
 import { HttpClientModule } from '@angular/common/http';
 import { AngularFireModule } from 'angularfire2';
-import { AngularFirestoreModule } from 'angularfire2/firestore';
+import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { FIREBASE_CONFIG } from './firebase.credentials';
 import { TokenProvider } from '../providers/token/token';
 import { PickuprequestProvider } from '../providers/pickuprequest/pickuprequest';
@@ -27,6 +28,7 @@ import { DriverProvider } from '../providers/rider/rider';
 import { OnlineStateProvider } from '../providers/online-state/online-state';
 import { DbProvider } from '../providers/db/db';
 import { RidesProvider } from '../providers/rides/rides';
+import { AngularFirestore } from 'angularfire2/firestore';
 
 
 @NgModule({
@@ -35,12 +37,13 @@ import { RidesProvider } from '../providers/rides/rides';
     HomePage,
     LoginPage,
     RidesPage,
-    EarningsPage
+    EarningsPage,
+    EditProfilePage
   ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
-    AngularFirestoreModule.enablePersistence(),
+    AngularFireDatabaseModule,
     AngularFireModule.initializeApp(FIREBASE_CONFIG),
     HttpClientModule,
     IonicStorageModule.forRoot()
@@ -51,7 +54,8 @@ import { RidesProvider } from '../providers/rides/rides';
     HomePage,
     LoginPage,
     RidesPage,
-    EarningsPage
+    EarningsPage,
+    EditProfilePage
   ],
   providers: [
     StatusBar,
@@ -66,7 +70,8 @@ import { RidesProvider } from '../providers/rides/rides';
     DriverProvider,
     OnlineStateProvider,
     DbProvider,
-    RidesProvider
+    RidesProvider, 
+    AngularFirestore
   ]
 })
 export class AppModule {}
